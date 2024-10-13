@@ -48,7 +48,3 @@ The course is structured into the following two semesters:
 ## Conclusion
 
 Throughout the course, students will work on multiple assignments, quizzes, and projects to reinforce their learning. By the end of this program, students will have a strong foundation in both frontend and backend development, enabling them to create robust web applications from scratch.
-
----
-
-Feel free to modify any sections or add more details as needed! Let me know if you need any further adjustments.
