@@ -25,6 +25,10 @@ This is a basic PHP CRUD (Create, Read, Update, Delete) application that uses My
 ├── add-process.php        # Backend script to process the addition of a student
 ├── config/
 │   └── connection.php     # Database connection configuration
+├── details.php            # Displays details of a selected student
+├── edit.php               # Form to edit a student record
+├── edit-process.php       # Backend script to process student update
+├── delete.php             # Backend script to delete a student
 ├── index.php              # Displays all student records and provides CRUD actions
 ```
 
@@ -62,6 +66,7 @@ mysqli_query($connection, $sql);
 ```
 
 Alternatively, you can manually create the `students` table:
+
 ```sql
 CREATE TABLE students (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -84,14 +89,43 @@ CREATE TABLE students (
 
 1. **Add Student**: Click the "Add Student" button to add a new student record using the form.
 2. **View Students**: All student records will be displayed on the home page (`index.php`).
-3. **Edit/Delete**: Future implementation will include editing and deleting options for each student.
+3. **Edit/Delete/Details**: For each student, you can view their details, edit their information, or delete the record using the corresponding buttons.
 
 ## Files Breakdown
 
 ### `index.php`
 - Displays the list of students in a table format.
 - Connects to the MySQL database and retrieves all student records.
-- Provides buttons for adding new students and placeholders for editing and deleting.
+- Provides buttons for viewing details, editing, and deleting student records.
+  
+Modification to `index.php` to include buttons for viewing details:
+```php
+<tr>
+    <th scope="row"><?php echo $student['name'] ?></th>
+    <td><?php echo $student['email'] ?></td>
+    <td><?php echo $student['age'] ?></td>
+    <td><a href="details.php?id=<?php echo $student['id'] ?>" class="btn btn-warning">Details</a></td>
+    <td><a href="edit.php?id=<?php echo $student['id'] ?>" class="btn btn-primary">Edit</a></td>
+    <td><a href="delete.php?id=<?= $student['id'] ?>" class="btn btn-danger">Delete</a></td>
+</tr>
+```
+
+### `details.php`
+- Displays detailed information for a specific student selected from the list.
+- Provides options to edit or delete the student, as well as a "Back" button to return to the list.
+
+### `edit.php`
+- Contains a form pre-populated with the student's current data.
+- Allows the user to update the student's name, email, and age.
+
+### `edit-process.php`
+- Receives the POST data from `edit.php`.
+- Updates the student record in the MySQL database based on the provided ID.
+- Redirects back to `index.php` after successful update.
+
+### `delete.php`
+- Deletes the student record from the MySQL database based on the provided ID.
+- Redirects back to `index.php` after successful deletion.
 
 ### `add.php`
 - Contains a form for adding new students.
@@ -106,7 +140,6 @@ CREATE TABLE students (
 - Contains the connection settings to the MySQL database.
 - Should be included in every file that requires database interaction.
 
-## Future Enhancements
-- **Edit Functionality**: Implement the logic to edit student details.
-- **Delete Functionality**: Add the ability to delete student records.
-- **Validation**: Add form validation to improve data integrity.
+## Conclusion
+
+In conclusion, this PHP CRUD application provides a comprehensive solution for managing student records. With its user-friendly interface and robust functionality, it is an ideal tool for educational institutions and organizations. The application's modular design and adherence to best practices make it easy to maintain and extend. By following the setup instructions and using the application, users can efficiently perform CRUD operations and manage student data with ease.
