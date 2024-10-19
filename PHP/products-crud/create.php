@@ -23,20 +23,19 @@
                 </span>
 
                 <div class="input-group">
-                    <textarea name="description" rows="3" placeholder="Enter Product Description" id="">
-                    <?php echo isset($_GET['description']) ? $_GET['description'] : "" ?>
-                    </textarea>
+                    <textarea name="description" rows="3" placeholder="Enter Product Description" id=""><?php echo isset($_GET['description']) ? $_GET['description'] : "" ?></textarea>
                 </div>
-                
+
                 <span class="errors"><?php echo isset($_GET['descriptionInput']) ? $_GET['error'] : "" ?></span>
 
                 <div class="input-group">
-                    <input type="text" name="price" id="price" placeholder="Enter Product Price">
+                    <input type="text" value="<?php echo isset($_GET['price']) ? $_GET['price'] : "" ?>" name="price" id="price" placeholder="Enter Product Price">
                 </div>
                 <span class="errors"><?php echo isset($_GET['priceInput']) ? $_GET['error'] : "" ?></span>
                 <div class="input-group">
-                    <input type="file" name="image" id="image" placeholder="Select Image">
+                    <input type="file" name="image" id="image" accept="image/*" placeholder="Select Image">
                 </div>
+                <span class="errors"><?php echo isset($_GET['imageInput']) ? $_GET['error'] : "" ?></span>
                 <div class="input-group">
                     <select name="category" id="">
                         <?php
@@ -44,6 +43,8 @@
                         ?>
                     </select>
                 </div>
+                <span class="errors"><?php echo isset($_GET['categoryInput']) ? $_GET['error'] : "" ?></span>
+                
                 <button type="submit">Submit</button>
             </form>
         </div>
