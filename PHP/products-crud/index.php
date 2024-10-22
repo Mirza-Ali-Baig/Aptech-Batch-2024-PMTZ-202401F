@@ -19,15 +19,15 @@
         if($products!=false){
             foreach($products as $product){
                 echo '<div class="productCard">
-                        <img src="https://cdn.pixabay.com/photo/2022/12/01/04/43/girl-7628308_640.jpg" alt="">
+                        <img src="assets/uploads/'.$product['image'].'" alt="">
                          <div class="info">
                             <h3 class="title">'.$product['title'].'</h3>
                             <div class="quantity">'.$product['description'].'</div>
                             <div class="price">RS: '.$product['price'].'</div>
                             <div class="price">Category: '.$product['category'].'</div>
                             <div class="action">
-                                <a href="" class="edit">Edit</a>
-                                <a href="" class=" delete">Delete</a>
+                                <a href="edit.php?id='.$product['id'].'" class="edit">Edit</a>
+                                <a href="delete.php?id='.$product['id'].'&image='.$product['image'].'" class=" delete">Delete</a>
                             </div>
                         </div>
                     </div>';

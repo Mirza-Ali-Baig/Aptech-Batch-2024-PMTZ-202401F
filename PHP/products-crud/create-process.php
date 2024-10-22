@@ -11,18 +11,22 @@ $category=htmlspecialchars($_POST['category']);
 if(empty($title)){
     $message="Title is Required!";
     header("location: create.php?titleInput&error=$message");
+    exit();
 }
 elseif(empty($description)){
     $message="Description is Required!";
     header("location: create.php?descriptionInput&error=$message&title=$title");
+    exit();
 }
 elseif(empty($price)){
     $message="Price is Required!";
     header("location: create.php?priceInput&error=$message&title=$title&description=$description");
+    exit();
 }
 elseif(!isset($category) && empty($category)){
     $message="Category is Required!";
     header("location: create.php?categoryInput&error=$message&title=$title&description=$description&price=$price");
+    exit();
 }
 
 $image_name=$_FILES['image']['name'];
@@ -34,6 +38,7 @@ $image_ext=explode('/',$image_type)[1];
 if(empty($image_name)){
     $message="Image is Required!";
     header("location: create.php?imageInput&error=$message&title=$title&description=$description&price=$price");
+    exit();
 }
 
 
@@ -42,6 +47,7 @@ $allowed_images=['image/png','image/jpeg','image/jpg','image/gif','image/webp','
 if(!in_array($image_type,$allowed_images)){
     $message="File Type No Allowed!";
     header("location: create.php?imageInput&error=$message&title=$title&description=$description&price=$price");
+    exit();
 }
 
 // if($image_size > (1024 *2)){
@@ -63,7 +69,7 @@ echo $image_name;
 
 move_uploaded_file($image_tmp_name,"assets/uploads/$image_name");
 
-if(addProducts($title,$description,$price,$image_name,$category)){
+if(addProduct($title,$description,$price,$image_name,$category)){
     header('location: index.php');
 }else{
     echo "Error";
