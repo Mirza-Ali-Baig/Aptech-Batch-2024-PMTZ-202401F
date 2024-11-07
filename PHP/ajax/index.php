@@ -16,7 +16,7 @@
         <div class="flex justify-between items-center mb-4 px-4">
             <!-- Search input and button -->
             <div class="flex items-center space-x-2">
-                <input type="text" placeholder="Search..."
+                <input type="text" id="searchInput" placeholder="Search..."
                        class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
             <!-- Add button -->
@@ -143,7 +143,7 @@
         </div>
         <div class="flex justify-end mt-6">
             <button type="button" class="px-4 py-2 bg-gray-300 text-gray-800 text-sm font-medium rounded-md mr-2" onclick="closeModal('#editStudentModal')">Cancel</button>
-            <button type="button" class="px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-md">Update</button>
+            <button id="updateStudentBtn" type="button" class="px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-md">Update</button>
         </div>
     </div>
 </div>
@@ -155,7 +155,7 @@
         <p class="text-sm text-gray-600 mb-6">Are you sure you want to delete this student?</p>
         <div class="flex justify-end">
             <button type="button" class="px-4 py-2 bg-gray-300 text-gray-800 text-sm font-medium rounded-md mr-2" onclick="closeModal('#deleteConfirmationModal')">Cancel</button>
-            <button type="button" class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md">Delete</button>
+            <button type="button" id="deleteStudentBtn" class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md">Delete</button>
         </div>
     </div>
 </div>
@@ -182,29 +182,95 @@
         });
 
         // Details button click event
-        $('button:contains("Details")').click(function () {
-            // Populate the modal with data
-            $('#viewStudentName').text('John Brown');
-            $('#viewStudentEmail').text('john@example.com');
-            $('#viewStudentPhone').text('123-456-7890');
-            $('#viewStudentCourse').text('Course 1');
+        $('#tableBody').on('click','#detail-btn',function(){
             openModal('#viewStudentModal');
+            let tr=$(this).parent().parent();
+            let name=tr.children().eq(0);
+            let email=tr.children().eq(1);
+            let phone=tr.children().eq(2);
+            let course=tr.children().eq(3);
+            $('#viewStudentName').text(name.text());
+            $('#viewStudentEmail').text(email.text());
+            $('#viewStudentPhone').text(phone.text());
+            $('#viewStudentCourse').text(course.text());
+            
         });
 
+        let editId=null
         // Edit button click event
-        $('button:contains("Edit")').click(function () {
-            // Populate the modal with data
-            $('#editStudentName').val('John Brown');
-            $('#editStudentEmail').val('john@example.com');
-            $('#editStudentPhone').val('123-456-7890');
-            $('#editStudentCourse').val('course1');
+        $('#tableBody').on('click','#edit-btn',function(){
+            $id=$(this).attr('data-id');
+            editId=$id;
             openModal('#editStudentModal');
+            let tr=$(this).parent().parent();
+            let name=tr.children().eq(0);
+            let email=tr.children().eq(1);
+            let phone=tr.children().eq(2);
+            let courseId=tr.children().eq(3).attr('data-id');
+            $('#editStudentName').val(name.text());
+            $('#editStudentEmail').val(email.text());
+            $('#editStudentPhone').val(phone.text());
+            getAllCourses('#editStudentCourse',courseId);
+            
+            
         });
 
-        // Delete button click event
-        $('button:contains("Delete")').click(function () {
-            openModal('#deleteConfirmationModal');
+        // Update button click event
+
+        $('#updateStudentBtn').click(function(){
+            console.log(editId);
+             let name=$('#editStudentName').val();
+             let email=$('#editStudentEmail').val();
+             let phone=$('#editStudentPhone').val();
+             let courseId=$('#editStudentCourse').val();
+             if(name=='' || email=='' || phone==''){
+                alert('All fields are required');
+                return;
+            }
+            $.ajax({
+                url:'actions/editStudent.php',
+                method:'POST',
+                data:{id:editId,name,email,phone,course:courseId},
+
+                success:function(data){
+                    closeModal('#editStudentModal');
+                    alert('Student Edit successfully');
+                    console.log(data);
+                    getAllStudents();
+                },
+                error:function(){
+                    console.log('Error occurred');
+                }
+            })
+            
         });
+        // Delete button click event
+        let deleteId=null;
+        $('#tableBody').on('click','#delete-btn',function(){
+            let id=$(this).attr('data-id');
+            deleteId=id;
+            openModal('#deleteConfirmationModal');
+            
+        });
+
+        $('#deleteStudentBtn').click(function(){
+            $.ajax({
+                url:'actions/deleteStudent.php',
+                method:'POST',
+                data:{id:deleteId},
+
+                success:function(data){
+                    closeModal('#deleteConfirmationModal');
+                    alert('Student Deleted successfully');
+                    getAllStudents();
+                },
+                error:function(){
+                    console.log('Error occurred');
+                }
+            })
+
+        });
+
 
         $('#saveStudentBtn').click(function () {
             let name=$('#studentName').val();
@@ -225,6 +291,7 @@
                     closeModal('#addStudentModal');
                     alert('Student added successfully');
                     console.log(data);
+                    getAllStudents();
                 },
                 error:function(){
                     console.log('Error occurred');
@@ -232,13 +299,20 @@
             })
             
         })
-        function getAllCourses(id =null){
+        $('#searchInput').keydown(function(){
+            console.log($(this).val());
+            getAllStudents($(this).val()); // Call the function to get all students with search query
+            
+        });
+
+        function getAllCourses(selectboxId,id =null){
             $.ajax({
                 url:'actions/getAllCourses.php',
                 method:'POST',
+                data:{id},
 
                 success:function(data){
-                    $('#studentCourse').html(data);
+                    $(selectboxId).html(data);
                     // console.log(data);
                     
                 },
@@ -247,12 +321,13 @@
                 }
             })
         }
-        getAllCourses(); // Call the function to get all courses on page load
+        getAllCourses('#studentCourse'); // Call the function to get all courses on page load
 
         function getAllStudents(search=null){
             $.ajax({
                 url:'actions/getAllStudents.php',
                 method:'POST',
+                data:{search},
 
                 success:function(data){
                     $('#tableBody').html(data);
