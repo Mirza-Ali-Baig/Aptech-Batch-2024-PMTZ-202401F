@@ -1,20 +1,37 @@
+loadCourseDropDown('studentCourse');
+let addStudentForm = document.getElementById('addStudentForm');
 
-let addCourseForm=document.getElementById('addCourseForm');
-
-addCourseForm.addEventListener('submit', async (ev)=>{
-    ev.preventDefault();
-    const courseName=document.getElementById('courseName');
-    if (courseName.value ===""){
-        showToast("Course Name is Required")
+addStudentForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    let name = document.getElementById("studentName");
+    let email = document.getElementById('studentEmail');
+    let phone = document.getElementById('studentPhone');
+    let course = document.getElementById('studentCourse');
+    if (name.value == '' || email.value == '' || phone.value == '' || course.value == null || course.value == '') {
+        alert("All Inputs Are Required!!");
         return;
     }
-    let addCourse= await fetch(url+'students',{
-        method:"POST",
-        body:JSON.stringify({name:courseName.value}),
-        headers:{
-            "Content-Type":"application/json"
+    try {
+        let data = {
+            name:name.value,
+            email:email.value,
+            phone:phone.value,
+            course:course.value
+        };
+        let req = await fetch(url + 'students', {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        req = await req.json();
+        if (req.status){
+            showToast(req.message);
+            name.value='',email.value='',phone.value='',course.value='';
         }
-    })
-    addCourse=await addCourse.json();
-    console.log(addCourse);
-})
+    } catch (e) {
+        console.log(e.message);
+    }
+
+});

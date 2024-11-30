@@ -24,3 +24,17 @@ function showToast(message){
         },
     }).showToast();
 }
+
+async function loadCourseDropDown(dropdownId=null,selectedId=null){
+    let coursesData=await fetch(url+'courses');
+    coursesData=await coursesData.json();
+    if (coursesData.status){
+        let courses=coursesData.data;
+        let dropdownHtml='<option selected disabled value=""> Select Course </option>'
+        for (let course of courses) {
+            dropdownHtml+=`<option value="${course.id}"> ${course.name} </option>`;
+        }
+       document.getElementById(dropdownId).innerHTML=dropdownHtml;
+    }
+}
+// loadCourseDropDown()

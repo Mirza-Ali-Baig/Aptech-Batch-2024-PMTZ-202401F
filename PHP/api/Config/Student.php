@@ -96,7 +96,7 @@ class Student extends Connection
     public function getAllStudents($search = null): string
     {
         try {
-            $sql = "SELECT s.*, c.name as course FROM `students` s join `courses` c on s.course_id=c.id";
+            $sql = "SELECT s.*, c.name as course FROM `students` s join `courses` c on s.course_id=c.id order by s.id";
             if ($search != null) {
                 $sql .= " WHERE s.name LIKE :search OR c.name LIKE :search OR s.email LIKE :search";
             }
