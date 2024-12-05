@@ -1,0 +1,22 @@
+composer create-project laravel/laravel crud_query_builder
+
+php artisan serve
+
+php artisan make:view admin.layout.master
+
+php artisan make:view admin.ui.header
+
+php artisan make:view admin.ui.footer
+
+
+php artisan make:view admin.ui.sidebar
+
+php artisan make:migration create_departments_table
+
+php artisan make:migration create_employees_table
+
+php artisan migrate
+
+php artisan make:controller DepartmentController --resource
+
+php artisan make:view admin.department.create
