@@ -49,7 +49,7 @@
                             <td><?php echo $student['age'] ?></td>
                             <td><a href="details.php?id=<?php echo $student['id'] ?>" class="btn btn-warning">Details</a></td>
                             <td><a href="edit.php?id=<?php echo $student['id'] ?>" class="btn btn-primary">Edit</a></td>
-                            <td><a href="delete.php?id=<?= $student['id'] ?>" class="btn btn-danger">Delete</a></td>
+                            <td><a href="delete.php?id=<?=  $student['id'] ?>" class="btn btn-danger">Delete</a></td>
                         </tr>
                 <?php
                     }
